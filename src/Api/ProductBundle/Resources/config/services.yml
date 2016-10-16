@@ -1,0 +1,17 @@
+services:
+    product.redis.repository:
+        class: Api\ProductBundle\Repository\ProductRedisRepository
+        arguments:  ['@snc_redis.default']
+
+    product.repository:
+        class: Api\ProductBundle\Repository\ProductRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - Api\ProductBundle\Entity\Product
+
+    product.handler:
+        class: Api\ProductBundle\Handler\ProductHandler
+        arguments:
+            productRepository: "@product.repository"
+            productRedisRepository: "@product.redis.repository"
+            serializer: "@jms_serializer"
